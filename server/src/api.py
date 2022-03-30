@@ -16,7 +16,7 @@ headers = {
         'X-RapidAPI-Key': API_KEY
 }
 numbers = ''.join([str(i) for i in range(10)])
-print('nums: ',numbers)
+print('nums: ', numbers)
 app = Flask(__name__)
 
 def getWords(param):
@@ -56,15 +56,25 @@ def getWordleWords(letters):
 
 @app.route('/wordscape/<letters>')
 def getWorsdcapeWords(letters):
-    param['regex'] = '^[' + letters + '][^' + numbers + ']{3,5}$'
-    resp, code = getWords(param)
-    resp = json.loads(resp)
-    print('resp: ', resp)
+    try:
+        param['regex'] = '^[' + letters + '][^' + numbers + ']{3,5}$'
+        resp, code = getWords(param)
+        resp = json.loads(resp)
+        print('resp: ', resp)
 
-    words = resp["results"]["data"]
-    return {
-        'wordscape': 'from wordscape api',
-        'letters to include': letters,
-        "words": words,
-        "code": code
-    }
+        words = resp["results"]["data"]
+        return {
+            'wordscape': 'from wordscape api',
+            'letters to include': letters,
+            "words": words,
+            "code": code
+        }
+    except Exception as e:
+        print('ERROR: something went wrong; ', e)
+        return{
+            'wordscape': 'from wordscape api',
+            'letters to include': letters,
+            "words": [],
+            "code": 400
+
+        }

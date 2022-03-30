@@ -1,8 +1,9 @@
-import logo from './logo.svg';
 import './App.css';
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useCallback} from 'react';
 import WordList from './components/wordList';
 import GameForm from './components/GameForm';
+import debounce from 'lodash.debounce';
+
 
 
 function App() {
@@ -12,8 +13,9 @@ function App() {
   const [includeLetters, setInclude] = useState('');
 
   useEffect(() => {
+    console.log('game is:', game);
     if(game === 'select one'){
-      console.log('returning... game selected is defualt value');
+      console.log('returning... game selected is defualt value', game);
       return;
     }
 
@@ -21,36 +23,43 @@ function App() {
     if(!letters){
       return;
     }
-    console.log('sedning: ',letters)
+    debounceGetWords(game, letters);
+  },[includeLetters, excludeLetters]);
+  
+  // const 
+  const getWords = (game, letters) => {
+    
     fetch(`/${game}/${letters}`)
       .then(resp => resp.json())
       .then(res => {
         console.log('res from api: ', res);
         setWords(res['words']);
-      });
+      }); 
+    
+  };
 
-  },[game, excludeLetters, includeLetters]);
+  const debounceGetWords = useCallback(
+    debounce((game, letters) => {
+      getWords(game, letters);
+    }, 1000), []
+  );
 
-  // from wordle
-  const setExcludeLetters = (excludeLetters) => {
-    console.log('setting exclude: ', excludeLetters);
-    setExclude(excludeLetters)
+  const setIncludeLetters = (letters) => {
+    setInclude(letters);
+    console.log('including letters: ', letters);
   }
-
-  // will be from wordscape 
-  const setIncludeLetters = (includeLetters) => {
-    console.log('setting: include: ', includeLetters);
-    setInclude(includeLetters)
+  const setExcludeLetters = (letters) => {
+    setExclude(letters);
+    console.log('excluding letters: ', letters);
   }
-
+  
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <p>
           Find the word you're looking for
         </p>
-        <div >
+        <div className='form'>
           <label htmlFor="game-select"> chose game</label>
           <select id="game-select" onChange={(e) => setGame(e.target.value)}>
             <option value="select one">select one</option>
