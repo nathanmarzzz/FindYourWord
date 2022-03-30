@@ -57,7 +57,8 @@ def getWordleWords(letters):
 @app.route('/wordscape/<letters>')
 def getWorsdcapeWords(letters):
     try:
-        param['regex'] = '^[' + letters + '][^' + numbers + ']{3,5}$'
+        # '^[evsl]+[evsl]+[evsl]+[evsl]+[evsl]$'
+        param['regex'] =  '^[' + letters +'][^' + numbers + " " +']{3,5}$'
         resp, code = getWords(param)
         resp = json.loads(resp)
         print('resp: ', resp)

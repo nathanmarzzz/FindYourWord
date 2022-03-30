@@ -3,22 +3,27 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const styles = makeStyles((themes) => ({
     wordlist: {
-        height: '450px',
+        height: '5%',
         width: '95px',
-        overflow: 'hidden',
+        marginLeft: '125%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '25px',
+        paddingTop: '5px',
         overflowY: 'scroll'
+
     },
     listItems: {
-        float: 'left',
-        border: '1px solid ',
-        borderRadius: '5px',
-        listStyle: 'none',
-        display: 'inline-block',
         width: '95px',
-        margin: '2px',
-        height: '15px',
-        paddingBottom: '1%',
-        fontSize: '17px'
+        height: '20px',
+        border: '1px solid ',
+        borderRadius: '7px',
+        listStyle: 'none',
+        display: 'center',
+        padding: '1%',
+        fontSize: '17px',
+        color: 'white',
+        margin: '7px'
     }
 }));
    

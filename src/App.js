@@ -13,9 +13,7 @@ function App() {
   const [includeLetters, setInclude] = useState('');
 
   useEffect(() => {
-    console.log('game is:', game);
     if(game === 'select one'){
-      console.log('returning... game selected is defualt value', game);
       return;
     }
 
@@ -26,7 +24,6 @@ function App() {
     debounceGetWords(game, letters);
   },[includeLetters, excludeLetters]);
   
-  // const 
   const getWords = (game, letters) => {
     
     fetch(`/${game}/${letters}`)
@@ -46,28 +43,28 @@ function App() {
 
   const setIncludeLetters = (letters) => {
     setInclude(letters);
-    console.log('including letters: ', letters);
   }
   const setExcludeLetters = (letters) => {
     setExclude(letters);
-    console.log('excluding letters: ', letters);
   }
   
   return (
     <div className="App">
       <header className="App-header">
-        <p>
+        <h5>
           Find the word you're looking for
-        </p>
-        <div className='form'>
+        </h5>
+      </header>
+      <div className='game-list'>
           <label htmlFor="game-select"> chose game</label>
           <select id="game-select" onChange={(e) => setGame(e.target.value)}>
             <option value="select one">select one</option>
             <option value="wordle">wordle</option>
             <option value="wordscape">wordscape</option>
           </select>
-          <p> selected value is: {game}</p>
-          {
+        </div>
+        <div className='letters'>
+        {
             game !== "select one" ?
             (
               <div className='gameForm'>
@@ -79,8 +76,10 @@ function App() {
             </div>
             ) : null
           }
+        </div>
+        <div className='words'>
           {
-            words ? 
+            words?.length > 0 && (includeLetters || excludeLetters ) ? 
             (
               <div className='api-results'>
                 <WordList words={words}></WordList>
@@ -88,7 +87,6 @@ function App() {
             ) : null
           }
         </div>
-      </header>
     </div>
   );
 }

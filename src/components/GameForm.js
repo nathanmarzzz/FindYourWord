@@ -3,10 +3,16 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const styles = makeStyles((themes) => ({
     form: {
-        width: '50%',
-        height: '60%',
-        margin: '5px',
-        display: 'inline-block'
+        width: '100%',
+        height: '5px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        color: 'white',
+        justifyContent: 'center',
+        position: 'relative'
+
+
     }
 }));
 
