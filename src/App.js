@@ -2,6 +2,7 @@ import './App.css';
 import {useEffect, useState, useCallback} from 'react';
 import WordList from './components/wordList';
 import GameForm from './components/GameForm';
+import Filter from './components/Filter';
 import debounce from 'lodash.debounce';
 
 
@@ -11,6 +12,8 @@ function App() {
   const [words, setWords] = useState(null);
   const [excludeLetters, setExclude] = useState('');
   const [includeLetters, setInclude] = useState('');
+  const [filter, setFilter] = useState('');
+  const [filteredWords, SetFilteredWords] = useState([]);
 
   useEffect(() => {
     if(game === 'select one'){
@@ -47,6 +50,24 @@ function App() {
   const setExcludeLetters = (letters) => {
     setExclude(letters);
   }
+
+  const handleSetFilter = (filter) => {
+      setFilter(filter);
+  }
+
+  useEffect(() => {
+    filterWords(words, filter);
+  }, [filter]);
+
+  const filterWords = (words) => {
+    if(!words || !filter){
+      SetFilteredWords([]);
+      return;
+    }
+    const fwords = words.filter(word => word.length == filter);
+    SetFilteredWords(fwords);
+  
+  };
   
   return (
     <div className="App">
@@ -55,7 +76,7 @@ function App() {
           Find the word you're looking for
         </h5>
       </header>
-      <div className='game-list'>
+        <div className='game-list'>
           <label htmlFor="game-select"> chose game</label>
           <select id="game-select" onChange={(e) => setGame(e.target.value)}>
             <option value="select one">select one</option>
@@ -77,12 +98,21 @@ function App() {
             ) : null
           }
         </div>
+        <div className='filter'>
+          {
+             words?.length > 0 && (includeLetters || excludeLetters )
+             ? (<Filter setFilter={handleSetFilter}></Filter>)
+             : null
+          }
+        </div>
         <div className='words'>
           {
             words?.length > 0 && (includeLetters || excludeLetters ) ? 
             (
-              <div className='api-results'>
-                <WordList words={words}></WordList>
+              <div>
+                <div className='api-results'>
+                  <WordList words={filteredWords && filter ? filteredWords : words}></WordList>
+                </div>
               </div>
             ) : null
           }

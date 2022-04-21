@@ -16,12 +16,12 @@ headers = {
         'X-RapidAPI-Key': API_KEY
 }
 numbers = ''.join([str(i) for i in range(10)])
-print('nums: ', numbers)
+# print('nums: ', numbers)
 app = Flask(__name__)
 
 def getWords(param):
     pattern = urlencode(param).split("=").pop()
-    url = f'/words/?letterPattern={pattern}&lettersmin={5}&limit=100&page=1'
+    url = f'/words/?letterPattern={pattern}&limit=100&page=1'
 
     conn.request(
         'GET',
@@ -36,10 +36,9 @@ def getWords(param):
 
 
 
-'''create first route'''
 @app.route('/wordle/<letters>')
 def getWordleWords(letters):
-    param['regex'] = '^[^' + letters + numbers + " "+ ']{5}$'
+    param['regex'] = '^[^' + letters + numbers + " "+ ']+[^' + letters + numbers + " "+ ']+[^' + letters + numbers + " "+ ']+[^' + letters + numbers + " "+ ']+[^' + letters + numbers + " "+ ']$'
     resp, code = getWords(param)
     
     resp = json.loads(resp)
@@ -56,26 +55,38 @@ def getWordleWords(letters):
 
 @app.route('/wordscape/<letters>')
 def getWorsdcapeWords(letters):
+    seen = set()
+    words = []
     try:
-        # '^[evsl]+[evsl]+[evsl]+[evsl]+[evsl]$'
-        param['regex'] =  '^[' + letters +'][^' + numbers + " " +']{3,5}$'
-        resp, code = getWords(param)
-        resp = json.loads(resp)
-        print('resp: ', resp)
+        three = '^[' + letters +']+[' + letters +']+[' + letters +']$'
+        four =  '^[' + letters +']+[' + letters +']+[' + letters +']+[' + letters +']$'
+        five =  '^[' + letters +']+[' + letters +']+[' + letters +']+[' + letters +']+[' + letters +']$'
+        
+        params = [three, four, five]
+        cnt = 3
+        for regex in params:
+            param['regex'] =  regex
+            resp, code = getWords(param)
+            resp = json.loads(resp)
+            print(f'resp from {cnt}: ', resp)
+            cnt +=1
 
-        words = resp["results"]["data"]
+            for word in resp["results"]["data"]:
+                if word not in seen:
+                    words.append(word)
+                    seen.add(word)
+            print('words: ', words)
         return {
-            'wordscape': 'from wordscape api',
+            'wordscape': 'success from wordscape api',
             'letters to include': letters,
             "words": words,
-            "code": code
+            "code": code # code only handles one response
         }
     except Exception as e:
         print('ERROR: something went wrong; ', e)
         return{
-            'wordscape': 'from wordscape api',
+            'wordscape': 'failed from wordscape api',
             'letters to include': letters,
             "words": [],
-            "code": 400
-
+            "code": 404
         }

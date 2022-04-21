@@ -35,21 +35,23 @@
   margin-top: -10px;
 }
 .gameForm {
-  width: 70%;
+  width: 75%;
   height: 100%;
   display: inline-block;
   margin-top: 10px;
-  color:white;
 }
 .words {
-  width: 25%;
+  width: 20%;
   height: 400px;
-  margin-top: 55px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-left: 270px;
+  margin-top: 15px;
+  margin-left: 35%;
   padding: 15px;
   overflow: auto;
+}
+
+.filter{
+  width: 20%;
+  height: 30px;
+  display: inline-block;
+  margin: 7px;
 }
